@@ -4,6 +4,13 @@ on:
   push:
     branches:
       - master
+    paths:
+      - "src/**"
+      - "test/**"
+      - "package.json"
+      - "tsconfig.json"
+      - "suglite.json5"
+      - ".github/workflows/build.yml"
     tags:
       - "*"
 
