@@ -1,0 +1,45 @@
+name: Python Bridge
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - "python/**"
+      - ".github/workflows/python-bridge.yml"
+
+  workflow_dispatch:
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - run: python -m pip install build
+
+      - run: python -m build python/ --wheel
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: valtheradb-conduit-wheel
+          path: python/dist/*.whl
+
+      - name: Publish Nightly Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: nightly
+          name: Nightly
+          prerelease: true
+          make_latest: false
+          files: python/dist/*.whl
