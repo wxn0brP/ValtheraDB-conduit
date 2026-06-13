@@ -57,7 +57,13 @@ jobs:
 
       - run: bun install
       - run: mkdir -p dist
-      - run: bun build --compile --target=${{ matrix.target }} --outfile=dist/${{ matrix.asset }} src/index.ts
+      - run: >
+          bun build --compile
+          --target=${{ matrix.target }}
+          --outfile=dist/${{ matrix.asset }}
+          --external=json5
+          --external=yaml
+          src/index.ts
 
       - uses: actions/upload-artifact@v4
         with:
