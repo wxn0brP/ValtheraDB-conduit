@@ -19,6 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      id-token: write
     steps:
       - uses: actions/checkout@v4
 
@@ -32,8 +33,13 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
-          name: valtheradb-conduit-wheel
-          path: python/dist/*.whl
+          name: wxn0brp-db-conduit-dist
+          path: python/dist/*
+
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: python/dist/
 
       - name: Publish Nightly Release
         uses: softprops/action-gh-release@v2

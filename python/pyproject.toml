@@ -1,10 +1,16 @@
 [project]
-name = "valtheradb-conduit"
+name = "wxn0brp-db-conduit"
 version = "0.0.1"
 description = "Python client for ValtheraDB Conduit."
 requires-python = ">=3.9"
 authors = [{ name = "wxn0brP" }]
-license = "MIT"
+license = { file = "LICENSE" }
+classifiers = [
+    "License :: OSI Approved :: MIT License",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["wxn0brp"]
 
 [build-system]
 requires = ["hatchling"]

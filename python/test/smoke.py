@@ -1,6 +1,6 @@
 from pathlib import Path
 import shutil
-from valtheradb_conduit import ValtheraConduit
+from wxn0brp.db import conduit
 
 ROOT = Path(__file__).resolve().parent
 INSTALL_DIR = ROOT / "vendor" / "vdb"
@@ -16,7 +16,7 @@ def main():
     reset_data_dir()
 
     print("starting conduit from:", INSTALL_DIR)
-    controller = ValtheraConduit(INSTALL_DIR)
+    controller = conduit.ValtheraConduit(INSTALL_DIR)
 
     print("ready:", controller.ready)
     print("ping:", controller.ping())

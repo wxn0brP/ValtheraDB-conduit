@@ -1,46 +1,102 @@
-# ValtheraDB Conduit Python Bridge
+# wxn0brp-db-conduit
 
-The Python bridge mirrors ValtheraDB's object style where possible while keeping Python naming conventions available.
+Python bridge for ValtheraDB Conduit.
+
+Install the package:
+
+```bash
+pip install wxn0brp-db-conduit
+```
+
+Import the package from the `wxn0brp.db` namespace:
 
 ```python
-from valtheradb_conduit import ValtheraConduit
+from wxn0brp.db import conduit
+```
 
-controller = ValtheraConduit("./vendor/vdb", auto_download=True)
+## Quick Start
 
-db = controller.data.init("./data", opts={"numberId": False})
+Create a controller, initialize a DB, then work with collections:
+
+```python
+from wxn0brp.db import conduit
+
+controller = conduit.ValtheraConduit("./vendor/vdb", auto_download=True)
+
+db = controller.data.init("./data")
 users = db.c("users")
 
-created = users.add({"name": "Ada"})
-found = users.find({"name": "Ada"})
-
-print(created)
-print(found)
+users.add({"name": "Ada"})
+print(users.find({"name": "Ada"}))
 
 controller.shutdown()
 ```
 
-Equivalent explicit style:
+Use a context manager when you want the conduit process to shut down automatically:
 
 ```python
-with ValtheraConduit(binary_path="./dist/valtheradb-conduit") as controller:
-    db = controller.init("data", "./data")
-    db.add({"collection": "users", "data": {"name": "Ada"}})
-    print(db.find({"collection": "users", "search": {"name": "Ada"}}))
+from wxn0brp.db import conduit
+
+with conduit.ValtheraConduit("./vendor/vdb", auto_download=True) as controller:
+    db = controller.data.init("./data")
+    users = db.c("users")
+
+    users.add({"name": "Ada"})
+    print(users.find({"name": "Ada"}))
+```
+
+## Controller and DB Initialization
+
+`ValtheraConduit` controls the conduit binary process. A DB must be initialized before it can execute operations.
+
+Attribute style:
+
+```python
+db = controller.data.init("./data", opts={"numberId": False})
+```
+
+Explicit style:
+
+```python
+db = controller.init("data", "./data", opts={"numberId": False})
 ```
 
 ## API Shape
 
-- `ValtheraConduit()` uses `./vendor/vdb/` as the default binary install directory.
-- `ValtheraConduit("/custom/install/dir")` uses a custom install directory.
-- `ValtheraConduit(binary_path="...")` bypasses install-dir resolution and runs an exact binary path.
-- `auto_download=True` shells out to `curl -fsSL` and downloads the matching GitHub Release asset on first run if the binary is missing.
-- `python -m valtheradb_conduit.install --install-dir ./vendor/vdb` can be used as an explicit install/postinstall step.
-- `controller.<name>.init(dir, opts=None)` initializes an internal DB name.
-- `controller.init(name, dir, opts=None)` is the explicit equivalent.
-- `db.execute(op, body=None)` maps directly to Conduit's `EXECUTE_JSON` frame.
-- `db.c("users")` and `db.collection("users")` return a `Collection`.
-- Collection methods build Valthera query objects for the collection.
+Attribute-style DB initialization names the DB from the attribute:
+
+```python
+db = controller.data.init("./data")
+```
+
+The explicit equivalent is:
+
+```python
+db = controller.init("data", "./data")
+```
+
+`opts` is optional and defaults to `{}`:
+
+```python
+db = controller.data.init("./data", opts={"numberId": False})
+```
+
+Collections are available through `db.c(name)`, `db.collection(name)`, or attribute access:
+
+```python
+users = db.c("users")
+users = db.collection("users")
+users = db.users
+```
 
 Both Pythonic snake_case and Valthera-style camelCase aliases are available for methods such as `find_one`/`findOne`, `update_one`/`updateOne`, and `update_one_or_add`/`updateOneOrAdd`.
 
-The bridge serializes calls per internal DB name because the protocol uses the DB name as the response correlation key.
+For explicit binary installation, run:
+
+```bash
+python -m wxn0brp.db.conduit.install --install-dir ./vendor/vdb
+```
+
+## License
+
+MIT
