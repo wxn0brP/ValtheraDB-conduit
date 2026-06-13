@@ -1,0 +1,11 @@
+[project]
+name = "valtheradb-conduit"
+version = "0.0.1"
+description = "Python client for ValtheraDB Conduit."
+requires-python = ">=3.9"
+authors = [{ name = "wxn0brP" }]
+license = "MIT"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"

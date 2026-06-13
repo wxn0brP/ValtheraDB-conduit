@@ -1,0 +1,12 @@
+node_modules
+dist
+target
+__pycache__
+*.pyc
+
+.vscode
+.suglite_history
+
+package-lock.json
+yarn.lock
+bun.lock
