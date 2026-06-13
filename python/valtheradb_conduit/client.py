@@ -38,6 +38,7 @@ class ValtheraConduit:
         auto_download: bool = False,
         repository: str = "wxn0brP/ValtheraDB-conduit",
         version: str | None = None,
+        nightly: bool = False,
         cwd: str | Path | None = None,
     ):
         binary = Path(binary_path) if binary_path else ensure_binary(
@@ -45,6 +46,7 @@ class ValtheraConduit:
             auto_download=auto_download,
             repository=repository,
             version=version,
+            nightly=nightly,
         )
         self._pending: dict[str, list[Future[Any]]] = {}
         self._db_locks: dict[str, threading.Lock] = {}

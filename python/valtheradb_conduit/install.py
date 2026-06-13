@@ -33,8 +33,13 @@ def binary_path(install_dir: str | os.PathLike[str] = DEFAULT_INSTALL_DIR) -> Pa
     return Path(install_dir) / binary_name()
 
 
-def release_url(repository: str = DEFAULT_REPOSITORY, version: str | None = None) -> str:
-    release = f"download/{version}" if version else "latest/download"
+def release_url(repository: str = DEFAULT_REPOSITORY, version: str | None = None, nightly: bool = False) -> str:
+    if nightly:
+        release = "download/nightly"
+    elif version:
+        release = f"download/{version}"
+    else:
+        release = "latest/download"
     return f"https://github.com/{repository}/releases/{release}/{asset_name()}"
 
 
@@ -44,6 +49,7 @@ def ensure_binary(
     auto_download: bool = False,
     repository: str = DEFAULT_REPOSITORY,
     version: str | None = None,
+    nightly: bool = False,
 ) -> Path:
     target = binary_path(install_dir)
     if target.exists():
@@ -53,7 +59,7 @@ def ensure_binary(
 
     target.parent.mkdir(parents=True, exist_ok=True)
     tmp = target.with_suffix(target.suffix + ".download")
-    subprocess.run(["curl", "-fsSL", "-o", str(tmp), release_url(repository, version)], check=True)
+    subprocess.run(["curl", "-fsSL", "-o", str(tmp), release_url(repository, version, nightly)], check=True)
     tmp.replace(target)
 
     if platform.system().lower() != "windows":
@@ -68,8 +74,9 @@ def main() -> None:
     parser.add_argument("--install-dir", default=str(DEFAULT_INSTALL_DIR))
     parser.add_argument("--repository", default=DEFAULT_REPOSITORY)
     parser.add_argument("--version")
+    parser.add_argument("--nightly", action="store_true")
     args = parser.parse_args()
-    print(ensure_binary(args.install_dir, auto_download=True, repository=args.repository, version=args.version))
+    print(ensure_binary(args.install_dir, auto_download=True, repository=args.repository, version=args.version, nightly=args.nightly))
 
 
 if __name__ == "__main__":
