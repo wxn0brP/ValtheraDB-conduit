@@ -1,7 +1,8 @@
 [project]
 name = "wxn0brp-db-conduit"
-version = "0.0.1"
+version = "0.0.2"
 description = "Python client for ValtheraDB Conduit."
+readme = "README.md"
 requires-python = ">=3.9"
 authors = [{ name = "wxn0brP" }]
 license = { file = "LICENSE" }
