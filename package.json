@@ -11,7 +11,7 @@
     "license": "MIT",
     "type": "module",
     "dependencies": {
-        "@wxn0brp/db-core": "^0.12.7",
+        "@wxn0brp/db-core": "^0.13.0",
         "@wxn0brp/db-storage-dir": "^0.120.3"
     },
     "devDependencies": {
